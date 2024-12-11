@@ -17,24 +17,34 @@ const User = require('./models/user');
 const helmet = require('helmet');
 
 const mongoSanitize = require('express-mongo-sanitize');
+const MongoStore = require('connect-mongo');
+
+
 
 
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
-
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-});
+//const dbUrl=process.env.DB_URL
+const dbUrl='mongodb://localhost:27017/yelp-camp' //for local testing(dbUrl replacement)
+    
+mongoose.connect(dbUrl)
+    .then(() => console.log("Database connected"))
+    .catch(err => console.error("Connection error:", err));
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
     console.log("Database connected");
+});
+
+ const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
 });
 
 const app = express();
@@ -51,6 +61,7 @@ app.use(mongoSanitize({
 }))
 
 const sessionConfig = {
+    store,
     name: 'session',
     secret: 'thisshouldbeabettersecret!',
     resave: false,

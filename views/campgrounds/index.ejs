@@ -24,6 +24,11 @@
                     <p class="card-text">
                         <small class="text-muted"><%= campground.location%></small>
                     </p>
+                    <div class="popup-markup">
+                        <%- campground.properties.popUpMarkup %>
+                    </div>
+
+                    
                     <a class="btn btn-primary" href="/campgrounds/<%=campground._id%>">View <%=campground.title%></a>
                 </div>
             </div>
