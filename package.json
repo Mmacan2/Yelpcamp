@@ -1,9 +1,13 @@
+
 {
   "name": "YelpCamp",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
+    
+    "predeploy": "rm -rf node_modules && npm install",
+    "deploy": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
